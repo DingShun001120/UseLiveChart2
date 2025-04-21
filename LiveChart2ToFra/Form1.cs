@@ -230,22 +230,28 @@ namespace LiveChart2ToFra
         //}
 
 
+        RealTimeChartView view;
+        ChartController controller;
+        ChartPropertyController controller2;
         public Form1()
         {
             InitializeComponent();
 
-            var chartPropertyModel = new ChartPropertyModel();  // 创建控件属性实例
-            var chartDataModel = new ChartDataModel();// 创建数据模型实例
-            var controller = new ChartController(chartDataModel);
+            ChartPropertyModel chartPropertyModel = new ChartPropertyModel();  // 创建控件属性实例
+            ChartDataModel chartDataModel = new ChartDataModel();// 创建数据模型实例
+            view = new RealTimeChartView(chartDataModel, chartPropertyModel);
+            controller = new ChartController(view, chartDataModel);
+            controller2 = new ChartPropertyController(view, chartPropertyModel);
 
 
-            var view = new RealTimeChartView(chartDataModel, chartPropertyModel);
-            var controller2 = new ChartPropertyController(view, chartPropertyModel);
+            //view.OnStartRequested += controller.StartSampling;
+            //view.OnStopRequested += controller.StopSampling;
+            //view.OnOverallRequested += controller.OverallData;
 
 
-            view.OnStartRequested += controller.StartSampling;
-            view.OnStopRequested += controller.StopSampling;
-            view.OnOverallRequested += controller.OverallData;
+            ////view.OnXMinLimitChangeRequested += controller2.
+
+            // 这里不做事件订阅，等 view 完全初始化之后再进行
             // 设置 RealTimeChartView 的大小
             view.Size = new Size(600, 400);  // 根据需要调整大小
             Controls.Add(view);

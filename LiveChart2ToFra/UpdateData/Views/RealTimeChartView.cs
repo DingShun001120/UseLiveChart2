@@ -119,9 +119,9 @@ namespace LiveChart2ToFra.UpdateData.Views
             layoutPanel.Controls.Add(_chart, 0, 4);
             layoutPanel.SetColumnSpan(_chart, 2); // 让图表占满两列
 
-            AddButton(layoutPanel, "开始", OnStartRequested, 0, 0);
-            AddButton(layoutPanel, "停止", OnStopRequested, 1, 0);
-            AddButton(layoutPanel, "全局", OnOverallRequested, 2, 0);
+            AddButton(layoutPanel, "开始", () => OnStartRequested?.Invoke(), 0, 0);
+            AddButton(layoutPanel, "停止", () => OnStopRequested?.Invoke(), 1, 0);
+            AddButton(layoutPanel, "全局", () => OnOverallRequested?.Invoke(), 2, 0);
 
             var Xmin = AddTextBox(layoutPanel, "0", 0, 1);
             var Xmax = AddTextBox(layoutPanel, "10", 1, 1);

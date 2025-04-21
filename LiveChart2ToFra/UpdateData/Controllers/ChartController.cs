@@ -1,4 +1,5 @@
 ﻿using LiveChart2ToFra.UpdateData.Models;
+using LiveChart2ToFra.UpdateData.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,19 @@ namespace LiveChart2ToFra.UpdateData.Controllers
 {
     public class ChartController : IDisposable
     {
+        private readonly RealTimeChartView _view;
         private readonly IChartDataModel _model;
         private readonly System.Windows.Forms.Timer _timer;
 
-        public ChartController(IChartDataModel model)
+        public ChartController(RealTimeChartView view, IChartDataModel model)
         {
+            _view = view;
             _model = model;
+
+            //订阅视图中按钮点击事件
+            _view.OnStartRequested += StartSampling;
+            _view.OnStopRequested += StopSampling;
+            _view.OnOverallRequested += OverallData;
 
             _timer = new System.Windows.Forms.Timer { Interval = 10 };
             _timer.Tick += (s, e) => _model.AddDataPoint();
