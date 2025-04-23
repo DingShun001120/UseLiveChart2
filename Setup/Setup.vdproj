@@ -297,6 +297,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_93AA430E94854E0A85F0F7473B024BCC"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_A8F2DE14CAEE89C69D101DD678554C52"
         "OwnerKey" = "8:_D94DD2FB098E4AF061781BB45339E5CD"
         "MsmSig" = "8:_UNDEFINED"
@@ -1126,6 +1132,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_93AA430E94854E0A85F0F7473B024BCC"
+            {
+            "SourcePath" = "8:C:\\Windows\\System32\\msiexec.exe"
+            "TargetName" = "8:UnInstall.exe"
+            "Tag" = "8:"
+            "Folder" = "8:_3610D36B593244CCB5DFD7CB42B4EA48"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A8F2DE14CAEE89C69D101DD678554C52"
             {
             "AssemblyRegister" = "3:1"
@@ -1351,7 +1377,7 @@
         {
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_3610D36B593244CCB5DFD7CB42B4EA48"
             {
-            "DefaultLocation" = "8:[ProgramFiles64Folder][Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:D:\\DingShun\\LiveChart2Test"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -1411,7 +1437,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:LiveCharts2Test"
         "ProductCode" = "8:{98DA93AD-A852-45E4-A4D8-7B4F1963B9F9}"
-        "PackageCode" = "8:{9EE917E2-7344-4471-8955-4CC98807737C}"
+        "PackageCode" = "8:{83F43650-EA0A-4747-94CA-6E8762C822CB}"
         "UpgradeCode" = "8:{1160B04B-C29E-436E-9E15-A05FCB16B1F7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1531,6 +1557,20 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_367E05E8732E432DB2021C8DC1536A76"
+            {
+            "Name" = "8:UnInstallK.exe"
+            "Arguments" = "8:/X{98DA93AD-A852-45E4-A4D8-7B4F1963B9F9}"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_93AA430E94854E0A85F0F7473B024BCC"
+            "Folder" = "8:_3610D36B593244CCB5DFD7CB42B4EA48"
+            "WorkingFolder" = "8:_3610D36B593244CCB5DFD7CB42B4EA48"
+            "Icon" = "8:"
+            "Feature" = "8:"
+            }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_A8608C1B42B240C09830C23D5337DEA5"
             {
             "Name" = "8:LiveTest"
@@ -1960,7 +2000,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_6104C325179D45C19BBC780EED3D0487"
             {
-            "SourcePath" = "8:..\\LiveChart2ToFra\\obj\\x64\\Release\\LiveChart2ToFra.exe"
+            "SourcePath" = "8:..\\LiveChart2ToFra\\obj\\Debug\\LiveChart2ToFra.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3610D36B593244CCB5DFD7CB42B4EA48"

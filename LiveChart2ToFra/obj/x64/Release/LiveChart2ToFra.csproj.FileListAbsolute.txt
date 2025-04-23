@@ -62,3 +62,4 @@ E:\VS\UseLiveChart2\LiveChart2ToFra\obj\x64\Release\LiveChart2ToFra.csproj.CoreC
 E:\VS\UseLiveChart2\LiveChart2ToFra\obj\x64\Release\LiveChart2ToFra.csproj.CopyComplete
 E:\VS\UseLiveChart2\LiveChart2ToFra\obj\x64\Release\LiveChart2ToFra.exe
 E:\VS\UseLiveChart2\LiveChart2ToFra\obj\x64\Release\LiveChart2ToFra.pdb
+E:\VS\UseLiveChart2\LiveChart2ToFra\obj\x64\Release\LiveChart2ToFra.Form1.resources
