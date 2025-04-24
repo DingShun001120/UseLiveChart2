@@ -17,6 +17,7 @@ using LiveChartsCore.Kernel.Events;
 using System.Reflection;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 
 namespace LiveChart2ToFra.UpdateData.Views
 {
@@ -37,8 +38,9 @@ namespace LiveChart2ToFra.UpdateData.Views
         public event Action OnStopRequested;
         public event Action OnOverallRequested;
         // 暴露控件事件和图表操作方法
-        public event EventHandler GoToPageRequested;
-        public event EventHandler ViewAllRequested;
+        //public event EventHandler GoToPageRequested;
+        //public event EventHandler ViewAllRequested;
+        public event Action ChartToImageSave;
 
         //给ChartPropertyController 订阅使用
         public event Action<int> OnXMinLimitChangeRequested;
@@ -50,6 +52,8 @@ namespace LiveChart2ToFra.UpdateData.Views
         public event EventHandler<MouseEventArgs> ScrollbarMouseDown;
         public event EventHandler<MouseEventArgs> ScrollbarMouseMove;
         public event EventHandler<MouseEventArgs> ScrollbarMouseUp;
+
+
 
 
         public RealTimeChartView(IChartDataModel chartModel,IChartPropertyModel chartPropertyModel)
@@ -273,9 +277,10 @@ namespace LiveChart2ToFra.UpdateData.Views
             CreateButton(flowControl, "开始", () => OnStartRequested?.Invoke());
             CreateButton(flowControl, "停止", () => OnStopRequested?.Invoke());
             CreateButton(flowControl, "全局", () => OnOverallRequested?.Invoke());
+            CreateButton(flowControl, "保存图", () => ChartToImageSave?.Invoke());
             //CreateButton(flowControl, "Go", () => GoToPageRequested?.Invoke());
             //CreateButton(flowControl, "View All", () => ViewAllRequested?.Invoke());
-            
+
 
             controlPanel.Controls.Add(flowControl);
             layoutPanel.Controls.Add(controlPanel, 0, 0);
@@ -488,6 +493,31 @@ namespace LiveChart2ToFra.UpdateData.Views
             if(model.ScrollableAxes[0].MinLimit == null)
             {
                 txtPage.Text = $"0";
+            }
+        }
+
+
+        public void SaveImage()
+        {
+            // 创建文件保存对话框
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "PNG Image|*.png";  // 设置文件类型过滤器
+                saveFileDialog.Title = "Save Chart Image";
+
+                // 显示对话框并获取用户选择的文件路径
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // 获取文件路径
+                    string filePath = saveFileDialog.FileName;
+
+                    // 保存图表
+                    // you can take any chart in the UI, and build an image from it 
+                    var chartControl = _chart;
+                    var skChart = new SKCartesianChart(chartControl) { Width = 900, Height = 600, };
+                    skChart.SaveImage(filePath);
+                    MessageBox.Show("图表已成功保存！", "保存成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
         }
     }
