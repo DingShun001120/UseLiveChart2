@@ -25,12 +25,20 @@ namespace LiveChart2ToFra.UpdateData.Views
         public CartesianChart _chart;
         public CartesianChart _scrollbarChart;
         private SplitContainer splitContainer;
+        private  TextBox txtPage;
+        private  Button btnGo;
+        private  Button btnSeeAll;
+        private Label lbTotalpage;
+
         private readonly IChartDataModel _chartDataModel;
         private readonly IChartPropertyModel _chartPropertyModel;
 
         public event Action OnStartRequested;
         public event Action OnStopRequested;
         public event Action OnOverallRequested;
+        // 暴露控件事件和图表操作方法
+        public event EventHandler GoToPageRequested;
+        public event EventHandler ViewAllRequested;
 
         //给ChartPropertyController 订阅使用
         public event Action<int> OnXMinLimitChangeRequested;
@@ -241,7 +249,7 @@ namespace LiveChart2ToFra.UpdateData.Views
             // 主布局表格（3行1列）
             var layoutPanel = new TableLayoutPanel
             {
-                RowCount = 4,
+                RowCount = 5,
                 ColumnCount = 1,
                 Dock = DockStyle.Fill,
                 RowStyles =
@@ -249,6 +257,7 @@ namespace LiveChart2ToFra.UpdateData.Views
                     new RowStyle(SizeType.Absolute, 40),   // 控制按钮行
                     new RowStyle(SizeType.Absolute, 40),   // X轴设置行
                     new RowStyle(SizeType.Absolute, 40),    // 字体设置行
+                    new RowStyle(SizeType.Percent, 150),     // 图表区域
                     new RowStyle(SizeType.Percent, 50)     // 图表区域
                 },
                 ColumnStyles = { new ColumnStyle(SizeType.Percent, 100) }
@@ -264,15 +273,48 @@ namespace LiveChart2ToFra.UpdateData.Views
             CreateButton(flowControl, "开始", () => OnStartRequested?.Invoke());
             CreateButton(flowControl, "停止", () => OnStopRequested?.Invoke());
             CreateButton(flowControl, "全局", () => OnOverallRequested?.Invoke());
+            //CreateButton(flowControl, "Go", () => GoToPageRequested?.Invoke());
+            //CreateButton(flowControl, "View All", () => ViewAllRequested?.Invoke());
+            
+
             controlPanel.Controls.Add(flowControl);
             layoutPanel.Controls.Add(controlPanel, 0, 0);
+
+
+            // 创建控件
+            var panel = new Panel { Height = 30, Dock = DockStyle.Top };
+            Label label1 = new Label { Width = 70, Text = "当前页：", Location = new Point(10, 5) };
+            txtPage = new TextBox { Width = 50, Location = new Point(80, 5) };
+            Label label2 = new Label { Width = 50, Text = "总页：", Location = new Point(140, 5) };
+            lbTotalpage = new Label { Width = 50, Text ="", BackColor = Color.AliceBlue, Location = new Point(190, 5) };
+            btnGo = new Button
+            {
+                Text = "Go",
+                Location = new Point(250, 5),
+                AutoSize = true
+            };
+            btnSeeAll = new Button
+            {
+                Text = "View All",
+                Location = new Point(330, 5),
+                AutoSize = true
+            };
+
+            // 添加控件
+            panel.Controls.AddRange(new Control[] { label1,txtPage, label2, lbTotalpage, btnGo, btnSeeAll });
+            layoutPanel.Controls.Add(panel, 0, 4);
+
+
+
+
+
             // X轴设置Panel（第二行）
             var xAxisPanel = new Panel { Dock = DockStyle.Fill };
             var xAxisTable = new TableLayoutPanel
             {
                 Dock = DockStyle.Fill,
                 ColumnCount = 4,
-                RowCount = 1,
+                RowCount = 2,
                 ColumnStyles =
                 {
                     new ColumnStyle(SizeType.Percent, 25),
@@ -281,7 +323,6 @@ namespace LiveChart2ToFra.UpdateData.Views
                     new ColumnStyle(SizeType.Percent, 25)
                 }
             };
-
             var txtXmin = CreateTextBox("0");
             var txtXmax = CreateTextBox("10");
             xAxisTable.Controls.Add(txtXmin, 0, 0);
@@ -300,7 +341,8 @@ namespace LiveChart2ToFra.UpdateData.Views
             {
                 Text = "修改标题字体",
                 Dock = DockStyle.Left,
-                Width = 150
+                Width = 150,
+                Visible = false,
             };
             btnFont.Click += (s, e) =>
             {
@@ -329,7 +371,8 @@ namespace LiveChart2ToFra.UpdateData.Views
             Button btnMoveDown = new Button
             {
                 Text = "下移 Panel2",
-                Dock = DockStyle.Top
+                Dock = DockStyle.Top,
+                Visible = false,
             };
             btnMoveDown.Click += (sender, e) =>
             {
@@ -426,6 +469,26 @@ namespace LiveChart2ToFra.UpdateData.Views
             _scrollbarChart.MouseDown += (s, e) => ScrollbarMouseDown?.Invoke(s, e);
             _scrollbarChart.GetDrawnControl().MouseMove += (s, e) => ScrollbarMouseMove?.Invoke(s, e);
             _scrollbarChart.MouseUp += (s, e) => ScrollbarMouseUp?.Invoke(s, e);
+        }
+
+        public int GetRequestedPage() => int.TryParse(txtPage.Text, out var page) ? page : -1;
+        public void SubscribeEvents(Action goHandler, Action viewAllHandler)
+        {
+            btnGo.Click += (s, e) => goHandler();
+            btnSeeAll.Click += (s, e) => viewAllHandler();
+        }
+
+        public void UpdateStatus(IChartDataModel model)
+        {
+            int start = (model.CurrentPage - 1) * model.PageSizePoints + 1;
+            int end = Math.Min(model.CurrentPage * model.PageSizePoints, model.Data1.Count);
+            //txtPage.Text = $"显示点位: {start}-{end} (共{model.Data1.Count}点) | 页数: {model.CurrentPage}/{model.TotalPages}";
+            txtPage.Text = $"{model.CurrentPage}";
+            lbTotalpage.Text =  $"{model.TotalPages}";
+            if(model.ScrollableAxes[0].MinLimit == null)
+            {
+                txtPage.Text = $"0";
+            }
         }
     }
 }

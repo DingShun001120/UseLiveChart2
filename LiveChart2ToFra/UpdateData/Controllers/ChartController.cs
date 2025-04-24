@@ -44,6 +44,8 @@ namespace LiveChart2ToFra.UpdateData.Controllers
 
             _timer = new System.Windows.Forms.Timer { Interval = 100 };
             _timer.Tick += (s, e) => _model.AddDataPoint();
+
+            _view.SubscribeEvents(HandlePageGo, HandleViewAll);
         }
 
         public void StartSampling() => _timer.Start();
@@ -123,6 +125,39 @@ namespace LiveChart2ToFra.UpdateData.Controllers
             var newMin = position.X - currentRange / 2;
             var newMax = position.X + currentRange / 2;
             _model.UpdateVisibleRange((double)newMin, (double)newMax);
+        }
+
+
+        private void HandlePageGo()
+        {
+            var requestedPage = _view.GetRequestedPage();
+            if (requestedPage < 1 || requestedPage > _model.TotalPages)
+            {
+                MessageBox.Show($"请输入有效页码 (1-{_model.TotalPages})");
+                return;
+            }
+
+            _model.GoToPage(requestedPage);
+            UpdateView();
+        }
+
+        private void HandleViewAll()
+        {
+            _model.SeeAll();
+            UpdateView();
+        }
+
+        private void UpdateView(bool init = false)
+        {
+            // WinForms需要手动刷新图表
+            _view.Invalidate();
+            _view.UpdateStatus(_model);
+
+            //if (!init)
+            //{
+            //    _view.RefreshChart();
+            //}
+
         }
     }
 }

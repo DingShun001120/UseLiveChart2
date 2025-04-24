@@ -19,6 +19,10 @@ namespace LiveChart2ToFra.UpdateData.Models
         private readonly Random _random = new();
         private double _lastX;
         private double _currentMaxX = 10;
+        public int PageSizePoints { get; set; } = 10; // 每页显示10个数据点
+
+        public int CurrentPage { get; private set; }  // 这里已经是接口要求的get访问器
+        public int TotalPages { get; set; }
 
         public ObservableCollection<ObservablePoint> Data1 { get; } = new();
         public ISeries[] Series1 { get; private set; }
@@ -27,7 +31,7 @@ namespace LiveChart2ToFra.UpdateData.Models
         public ObservableCollection<ObservablePoint> Data3 { get; } = new();
         public ISeries[] Series3 { get; private set; }
 
-        //表示图表的轴设置，通常用于控制图表的缩放和滚动。
+        //表示图表的轴设置，通常用于控制图表的缩放和滚动。    图标上用到的轴和滚动条上的是同一个
         public Axis[] ScrollableAxes { get; } =
         { 
             new Axis() 
@@ -64,6 +68,11 @@ namespace LiveChart2ToFra.UpdateData.Models
 
         public event EventHandler DataUpdated;
 
+        public ChartDataModel()
+        {
+            
+        }
+
         public void AddDataPoint()
         {
             var y = _random.Next(40, 100);
@@ -85,6 +94,7 @@ namespace LiveChart2ToFra.UpdateData.Models
             //    _currentMaxX = x + 1;
             //    DataUpdated?.Invoke(this, EventArgs.Empty);
             //}
+            TotalPages = (int)Math.Ceiling(Data1.Count / (double)PageSizePoints);
         }
 
         // 在非UI线程更新数据时需要使用Invoke
@@ -137,6 +147,42 @@ namespace LiveChart2ToFra.UpdateData.Models
             ScrollableAxes[0].MaxLimit = max;
             Thumbs[0].Xi = min;
             Thumbs[0].Xj = max;
+        }
+
+        public void GoToPage(int page)
+        {
+            if (page < 1 || page > TotalPages) return;
+
+            CurrentPage = page;
+            UpdateAxisLimits2();
+        }
+
+        public void SeeAll()
+        {
+            ScrollableAxes[0].MinLimit = null;
+            ScrollableAxes[0].MaxLimit = null;
+            Thumbs[0].Xi = null;
+            Thumbs[0].Xj = null;
+        }
+
+        private void UpdateAxisLimits()
+        {
+            var axis = ScrollableAxes[0];
+            axis.MinLimit = (CurrentPage - 1) * PageSizePoints - 0.5;
+            axis.MaxLimit = CurrentPage * PageSizePoints - 0.5;
+        }
+
+        private void UpdateAxisLimits2()
+        {
+            var axis = ScrollableAxes[0];
+            int startIndex = (CurrentPage - 1) * PageSizePoints;
+            int endIndex = Math.Min(startIndex + PageSizePoints - 1, Data1.Count - 1);
+
+            // 添加边距保证第一个和最后一个点完整显示
+            double margin = (double)((Data1[endIndex].X - Data1[startIndex].X) * 0.05);
+
+            axis.MinLimit = Data1[startIndex].X- margin;
+            axis.MaxLimit = Data1[endIndex].X + margin;
         }
     }
 }

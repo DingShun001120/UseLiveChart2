@@ -52,5 +52,14 @@ namespace LiveChart2ToFra.UpdateData.Models
 
         // 事件
         event EventHandler DataUpdated;
+
+
+
+        int PageSizePoints { get; set; }  // 每页显示点数（可动态调整）
+        int CurrentPage { get; }
+        int TotalPages { get; }
+
+        void GoToPage(int page);
+        void SeeAll();
     }
 }
