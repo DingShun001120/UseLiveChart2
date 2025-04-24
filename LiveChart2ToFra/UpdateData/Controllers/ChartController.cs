@@ -1,5 +1,6 @@
 ﻿using LiveChart2ToFra.UpdateData.Models;
 using LiveChart2ToFra.UpdateData.Views;
+using LiveChartsCore;
 using LiveChartsCore.Kernel.Sketches;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace LiveChart2ToFra.UpdateData.Controllers
             _view.OnStartRequested += StartSampling;
             _view.OnStopRequested += StopSampling;
             _view.OnOverallRequested += OverallData;
-
+            _view.ChartToImageSave += ChartSaveImage;
 
             _view.ScrollbarMouseDown += OnScrollbarMouseDown;
             _view.ScrollbarMouseMove += OnScrollbarMouseMove;
@@ -68,6 +69,13 @@ namespace LiveChart2ToFra.UpdateData.Controllers
         public void OverallData()
         {
             _model.ViewOverallData();
+        }
+
+
+        // 添加还原方法
+        public void ChartSaveImage()
+        {
+            _view.SaveImage();
         }
 
 
@@ -159,5 +167,9 @@ namespace LiveChart2ToFra.UpdateData.Controllers
             //}
 
         }
+
+
+
+       
     }
 }
